@@ -1,4 +1,5 @@
-export const stats = [
+
+export const statsBase = [
   {
     name: "Madrid",
     value: 587
@@ -66,5 +67,76 @@ export const stats = [
   {
     name: "Navarra",
     value: 13
+  }
+];
+
+export const stats22Marzo = [
+  {
+    name: "Madrid",
+    value: 9702
+  },
+  {
+    name: "La Rioja",
+    value: 654
+  },
+  {
+    name: "Andalucía",
+    value: 1725
+  },
+  {
+    name: "Cataluña",
+    value: 4704
+  },
+  {
+    name: "Valencia",
+    value: 1604
+  },
+  {
+    name: "Murcia",
+    value: 296
+  },
+  {
+    name: "Extremadura",
+    value: 384
+  },
+  {
+    name: "Castilla La Mancha",
+    value: 1819
+  },
+  {
+    name: "País Vasco",
+    value: 2097
+  },
+  {
+    name: "Cantabria",
+    value: 282
+  },
+  {
+    name: "Asturias",
+    value: 545
+  },
+  {
+    name: "Galicia",
+    value: 915
+  },
+  {
+    name: "Aragón",
+    value: 532
+  },
+  {
+    name: "Castilla y León",
+    value: 1744
+  },
+  {
+    name: "Islas Canarias",
+    value: 414
+  },
+  {
+    name: "Islas Baleares",
+    value: 331
+  },
+  {
+    name: "Navarra",
+    value: 794
   }
 ];
