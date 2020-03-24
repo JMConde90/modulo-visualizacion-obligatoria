@@ -20,7 +20,7 @@ const affectedRadiusScale = d3
                             //para el domino, hace tantas
                             //particiones como rangos se le
                             //indique
-
+//
 
   const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: any[]) => {
     const entry = currentStats.find(item => item.name === comunidad);
