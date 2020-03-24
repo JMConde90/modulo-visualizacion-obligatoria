@@ -14,15 +14,26 @@ const maxAffected = statsBase.reduce(
 );
 // creo los circulos para mostrar
 const affectedRadiusScale = d3
-  .scaleLinear()
+  .scaleQuantile()
   .domain([0, maxAffected])
-  .range([0, 50]); // 50 pixel max radius, we could calculate it relative to width and height
+  .range([10,20,30,40,40]); //rango de valores a asiganr
+                            //para el domino, hace tantas
+                            //particiones como rangos se le
+                            //indique
 
-const calculateRadiusBasedOnAffectedCases = (comunidad: string) => {
-  const entry = statsBase.find(item => item.name === comunidad);
 
-  return entry ? affectedRadiusScale(entry.value) : 0;
-};
+  const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: any[]) => {
+    const entry = currentStats.find(item => item.name === comunidad);
+    let size = affectedRadiusScale(entry.value);
+    
+    if(entry) {
+        size = affectedRadiusScale(entry.value);
+
+    }
+    
+    
+    return size;
+  };
 
 const svg = d3
   .select("body")
@@ -57,7 +68,7 @@ svg
   .enter()
   .append("circle")
   .attr("class", "affected-marker")
-  .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name))
+  .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name,statsBase))
   .attr("cx", d => aProjection([d.long, d.lat])[0])
   .attr("cy", d => aProjection([d.long, d.lat])[1])
   
@@ -68,26 +79,17 @@ svg
       .merge(circles as any)
       .transition()
       .duration(500)
-      .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name));
-  };
-  const updateChart = (data: any[]) => {
-    d3.selectAll("path")
-      .data(calculateRadiusBasedOnAffectedCases(data))
-      .transition()
-      .duration(500)
-      .attr("d", <any>arc);
+      .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name, data));
   };
 
   document
   .getElementById("base")
   .addEventListener("click", function handleResultsBase() {
-  console.log('He llegado');
     updateCircles (statsBase );
   });
 
   document
   .getElementById("22marzo")
   .addEventListener("click", function handleResults22Marzo() {
-    console.log('He llegado');
     updateCircles (stats22Marzo);
   });

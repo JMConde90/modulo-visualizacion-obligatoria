@@ -86,7 +86,7 @@ export const latLongCommunities = [
   }
 ];
 
-export const stats: communities[]= [
+export const stats= [
   {
     name: "Madrid",
     value: 587
