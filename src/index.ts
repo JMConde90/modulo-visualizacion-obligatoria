@@ -22,8 +22,7 @@ var color = d3
     "#ffb6b6",
     "#ffc9c9",
     "#ffdddd",
-    "#fff0f0"
-    
+    "#fff0f0"    
   ]);
   console.log(color)
 /*
