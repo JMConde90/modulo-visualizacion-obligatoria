@@ -43,7 +43,7 @@ const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: an
     }
   }
   else{
-    if(currentStats === statsBase){
+    
       const entry = currentStats.find(item => item.name === comunidad);
       
       
@@ -51,7 +51,7 @@ const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: an
           size = affectedRadiusScale(entry.value);
   
       }
-    }
+    
 
   }
 
@@ -60,7 +60,7 @@ const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: an
     return size;
   };
 
-
+//inicializo la primera vez el currentStats al caso base
 let currentStats = statsBase;
 
 
@@ -91,7 +91,7 @@ svg
   // datos cargados del archivo json
   .attr("d", geoPath as any);
 
-//Creo los circulos de afectados por cada comunidad
+//Creo los circulos de afectados por cada comunidad (la primera vez )
 svg
   .selectAll("circle")
   .data(latLongCommunities)
@@ -102,7 +102,7 @@ svg
   .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name,currentStats))
   .attr("cx", d => aProjection([d.long, d.lat])[0])
   .attr("cy", d => aProjection([d.long, d.lat])[1])
-  
+  //actualizo los circulos para la transicion de caso base a caso 22Marzo
   const updateCircles = (data: any[]) => {
     const circles = svg.selectAll("circle");
     circles
@@ -115,12 +115,12 @@ svg
 
   document
   .getElementById("base")
-  .addEventListener("click", function handleResultsBase(currentStats = statsBase) {
+  .addEventListener("click", function handleResultsBase() {
     updateCircles (statsBase );
   });
 
   document
   .getElementById("22marzo")
-  .addEventListener("click", function handleResults22Marzo(currentStats = stats22Marzo) {
+  .addEventListener("click", function handleResults22Marzo() {
     updateCircles (stats22Marzo);
   });
