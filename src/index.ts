@@ -6,34 +6,31 @@ import { latLongCommunities } from "./communities";
 import { statsBase } from "./stats";
 import { stats22Marzo } from "./stats";
 
-//Se calcula el numero maxima de afectados de todas
-//las comunidades
+//Define  a function to calculate maximum number of people in to communities it affected with covid-19.
 const maxAffected = statsBase.reduce(
   (max, item) => (item.value > max ? item.value : max),
   0
 );
-// creo los circulos para mostrar
+// Define the circles scale to show
 const affectedRadiusBasedScale = d3
   .scaleQuantile()
   .domain([0, maxAffected])
-  .range([5,10,15,25,30,35,40]); //rango de valores a asiganr
-                            //para el domino, hace tantas
-                            //particiones como rangos se le
-                            //indique
+  // the number of the partitions are assigned by discrete range.
+  .range([5,10,15,25,30,35,40]); 
 
+
+                            
 const affectedRadiusScale = d3
   .scaleQuantile()
   .domain([0, maxAffected])
-  .range([5,10,15,25,30,35,40,45,50]); //rango de valores a asiganr
-                           //para el domino, hace tantas
-                          //particiones como rangos se le
-                         //indique
+  .range([5,10,15,25,30,35,40,45,50]); 
+ 
                           
                           
 const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: any[]) => {
   let size = 0;
-  //para el caso base
-  if(currentStats === statsBase){
+  
+  if(currentStats === statsBase){// if it base case
     const entry = currentStats.find(item => item.name === comunidad);
     
     
@@ -42,7 +39,7 @@ const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: an
 
     }
   }
-  else{
+  else{// if it the other case
     
       const entry = currentStats.find(item => item.name === comunidad);
       
@@ -60,7 +57,7 @@ const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: an
     return size;
   };
 
-//inicializo la primera vez el currentStats al caso base
+//initialize the currentStats in to  base case.
 let currentStats = statsBase;
 
 
@@ -69,7 +66,7 @@ const svg = d3
   .append("svg")
   .attr("width", 1024)
   .attr("height", 800)
-  //color de fondo para el mapa
+  // background colour behind the map.
   .attr("style", "background-color: #FBFAF0");
 
 const aProjection = d3Composite
@@ -81,28 +78,28 @@ const aProjection = d3Composite
 
 const geoPath = d3.geoPath().projection(aProjection);
 const geojson = topojson.feature(spainjson, spainjson.objects.ESP_adm1);
-//Selecciono todas las comunidades 
+//select all the communities
 svg
   .selectAll("path")
   .data(geojson["features"])
   .enter()
   .append("path")
   .attr("class", "country")
-  // datos cargados del archivo json
+  // upload data json
   .attr("d", geoPath as any);
 
-//Creo los circulos de afectados por cada comunidad (la primera vez )
+//Created the affected circles for each community. (initialize the first time).
 svg
   .selectAll("circle")
   .data(latLongCommunities)
   .enter()
   .append("circle")
-  //fracciono la opacidad en los circulos para que se vea el fondo
+  //Opacity fraction for allow show the background.
   .attr("class", "affected-marker") 
   .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name,currentStats))
   .attr("cx", d => aProjection([d.long, d.lat])[0])
   .attr("cy", d => aProjection([d.long, d.lat])[1])
-  //actualizo los circulos para la transicion de caso base a caso 22Marzo
+  //Actualize the circles for the transaction the base case to case 22Marzo.
   const updateCircles = (data: any[]) => {
     const circles = svg.selectAll("circle");
     circles
