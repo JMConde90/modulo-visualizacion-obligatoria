@@ -636,6 +636,75 @@ const affectedRadiusScale = d3
   };
   
  ```
- 
- 
- 
+ - Initialize the currentStats in to base case for the first time.
+ ```typescript
+ let currentStats = statsBase;
+ ```
+ - Difined background painted zone to build the map.
+ ```typescript
+ const svg = d3
+  .select("body")
+  .append("svg")
+  .attr("width", 1024)
+  .attr("height", 800)
+  // background colour behind the map.
+  .attr("style", "background-color: #FBFAF0");
+```
+
+
+- Change the center map.
+```diff
+const aProjection = d3Composite
+   .geoConicConformalSpain()
+  // Let's make the map bigger to fit in our resolution
+   .scale(3300)
+  // Let's center the map
+-  .translate([600, 2000]);
++  .translate([500, 400]);
+
+```
+- Initialize the calculated infected radius circles in to base case whith include the new function to calculateRadiusBasedOnAffectedCases(d.name, currentStats).
+
+- Initialize the calculated infected radius circles in to base case whith include the new function to calculateRadiusBasedOnAffectedCases(d.name, currentStats).
+```diff
+svg
+  .selectAll("circle")
+  .data(latLongCommunities)
+  .enter()
+  .append("circle")
+  //Opacity fraction for allow show the background.
+  .attr("class", "affected-marker") 
+- .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name)) 
++ .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name, currentStats))
+  .attr("cx", d => aProjection([d.long, d.lat])[0])
+  .attr("cy", d => aProjection([d.long, d.lat])[1])
+  ```
+  - Actualize the circles for the transaction the base case to case 22Marzo.
+  ```typescript 
+  const updateCircles = (data: any[]) => {
+    const circles = svg.selectAll("circle");
+    circles
+      .data(latLongCommunities)
+      .merge(circles as any)
+      .transition()
+      .duration(500)
+      .attr("r", d => calculateRadiusBasedOnAffectedCases(d.name, data));
+  };
+  ```
+  
+  - Let's to include the transaction the use case statsBase to stats22Marzo when have mouse click in to the bottons.
+  ```typescript 
+    document
+  .getElementById("base")
+  .addEventListener("click", function handleResultsBase() {
+    updateCircles (statsBase );
+  });
+
+  document
+  .getElementById("22marzo")
+  .addEventListener("click", function handleResults22Marzo() {
+    updateCircles (stats22Marzo);
+  });
+  
+  ```
+  
