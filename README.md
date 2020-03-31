@@ -569,6 +569,24 @@ import { latLongCommunities } from "./communities";
 + import { statsBase } from "./stats";
 + import { stats22Marzo } from "./stats";
 ```
+- Add two buttons to change the visualization in to the differents use case.
+_./src/index.html_
+```diff
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./map.css" />
+    <link rel="stylesheet" type="text/css" href="./base.css" />
+  </head>
+  <body>
+    <div>
+ +     <button id= "base">Caso base</button>
+ +     <button id= "22marzo">Case 22 Marzo</button>
+    </div>
+    <script src="./index.ts"></script>
+  </body>
+</html>
+```
+
 
 - Let's define  a function to calculate maximum number of people in to communities it affected with covid-19.
 
@@ -580,3 +598,44 @@ const maxAffected = statsBase.reduce(
 
 ```
 
+- Define two different scales for each use case because the number of infected growing exponential.
+
+```typescript
+const affectedRadiusBasedScale = d3
+  .scaleQuantile()
+  .domain([0, maxAffected])
+  // the number of the partitions are assigned by discrete range.
+  .range([5,10,15,25,30,35,40]); 
+
+
+                            
+const affectedRadiusScale = d3
+  .scaleQuantile()
+  .domain([0, maxAffected])
+  .range([5,10,15,25,30,35,40,45,50]); 
+ ```
+ - Now we start to calculate the radius of the infected circles for the each  use cases.
+ ```typescript
+ const calculateRadiusBasedOnAffectedCases = (comunidad: string, currentStats: any[]) => {
+  let size = 0;
+  if(currentStats === statsBase){// if it base case
+    const entry = currentStats.find(item => item.name === comunidad);
+    if(entry) {
+        size = affectedRadiusBasedScale(entry.value);
+
+    }
+  }
+  else{// if it the other case
+    
+      const entry = currentStats.find(item => item.name === comunidad);
+      if(entry) {
+          size = affectedRadiusScale(entry.value);
+      }
+  }
+    return size;
+  };
+  
+ ```
+ 
+ 
+ 
